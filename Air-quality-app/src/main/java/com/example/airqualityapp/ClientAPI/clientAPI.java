@@ -81,13 +81,51 @@ public class clientAPI {
             JsonObject weather = fetchWeather();
             JsonObject data = fetchAirQuality(latitude,longitude);
 
+            JsonObject hourly = data.getAsJsonObject("hourly");
+            JsonArray times = hourly.getAsJsonArray("time");
+            if (times == null || times.size() == 0) {
+                System.err.println("No data sended");
+                return;
+            }
+
+            String timestamp = times.get(0).getAsString();
+
+            JsonObject airQuality = new JsonObject();
+            airQuality.add("pm10", getFirstOrNull(hourly, "pm10"));
+            airQuality.add("pm2_5", getFirstOrNull(hourly, "pm2_5"));
+            airQuality.add("carbonMonoxide", getFirstOrNull(hourly, "carbon_monoxide"));
+            airQuality.add("nitrogenDioxide", getFirstOrNull(hourly, "nitrogen_dioxide"));
+            airQuality.add("sulphurDioxide", getFirstOrNull(hourly, "sulphur_dioxide"));
+            airQuality.add("ozone", getFirstOrNull(hourly, "ozone"));
+
+            JsonObject reading = new JsonObject();
+            reading.addProperty("timestamp", timestamp);
+            reading.add("weather", weather);
+            reading.add("airQuality", airQuality);
+
+            System.out.println("Sending to backend:\n" + gson.toJson(reading));
+
+            JsonObject response = sendToBackend(reading, name, port);
+
+            System.out.println("Backend response:" + gson.toJson(response));
 
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.err.println("Error:" + e.getMessage());
         }
-
     }
+
+    private static JsonElement getFirstOrNull(JsonObject hourly, String key) {
+        try {
+            JsonArray array = hourly.getAsJsonArray(key);
+            return array.size() > 0 ? array.get(0) : JsonNull.INSTANCE;
+        } catch (Exception e) {
+            return JsonNull.INSTANCE;
+        }
+    }
+
 }
