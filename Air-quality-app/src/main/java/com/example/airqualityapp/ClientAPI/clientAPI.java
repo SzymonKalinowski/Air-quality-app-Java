@@ -1,12 +1,10 @@
 package com.example.airqualityapp.ClientAPI;
 
 import java.io.IOException;
-import java.lang.classfile.components.ClassPrinter;
 import java.net.http.*;
 import java.net.URI;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 
 public class clientAPI {
     private static String latitude = "52.52";
@@ -63,7 +61,11 @@ public class clientAPI {
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url)).build();
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
