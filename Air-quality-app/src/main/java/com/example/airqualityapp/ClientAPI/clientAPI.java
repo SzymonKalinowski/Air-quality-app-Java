@@ -11,13 +11,14 @@ public class clientAPI {
     private static String longitude = "13.41";
 
     private static String name = "localhost";
-    private static Integer port = 8080;
+    private static int port = 8080;
 
 
     private static final Gson gson = new Gson();
 
     public static JsonObject fetchWeather() throws IOException, InterruptedException {
-        String url = "https://api.open-meteo.com/v1/forecast?latitude=52.2297&longitude=21.0122&current_weather=true&hourly=pressure_msl,relative_humidity_2m";
+        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&current_weather=true&hourly=pressure_msl,relative_humidity_2m",
+                latitude, longitude);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()

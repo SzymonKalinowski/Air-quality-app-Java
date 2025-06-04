@@ -1,21 +1,24 @@
 package com.example.airqualityapp.Controller;
 
+import com.example.airqualityapp.Model.Reading;
+import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 @RestController
 @RequestMapping("/readings")
 public class readingController {
 
+
+
     @PostMapping
     public ResponseEntity<String> receiveReading(@RequestBody String payload) {
         try {
-            JsonObject reading = JsonParser.parseString(payload).getAsJsonObject();
-            System.out.println("Recived: " + reading.toString());
-            return ResponseEntity.ok(reading.toString());
+            Gson gson = new Gson();
+            Reading reading = gson.fromJson(payload, Reading.class);
+            System.out.println(reading);
+            return ResponseEntity.ok("Parsed successfully");
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Invalid JSON: " + e.getMessage());
         }
