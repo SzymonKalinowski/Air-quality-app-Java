@@ -15,6 +15,15 @@ public class readingService {
         this.reading = reading;
     }
 
+    public void setReading(Reading reading) {
+        this.reading = reading;
+    }
+
+    public Reading getLastReceivedReading() {
+        return this.reading;
+    }
+
+
     public ReadingClosestTimestamp getClosestToTimestamp() {
         String timestamp = reading.getTimestamp();
         List<String> time = reading.getWeather().getHourly().getTime();
