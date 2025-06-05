@@ -106,14 +106,10 @@ public class ReadingClosestTimestamp {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Hourly {
-        @NotEmpty
-        private List<@NotBlank String> time;
 
-        @NotEmpty
-        private List<@NotNull Double> pressure_msl;
-
-        @NotEmpty
-        private List<@NotNull @Min(0) @Max(100) Integer> relative_humidity_2m;
+        @NotBlank private String time;
+        @NotNull private Double pressure_msl;
+        @NotNull private Integer relative_humidity_2m;
     }
 
     @Data
